@@ -13,6 +13,15 @@ class Expenses {
     validateData(){ //Metodo forIn vai recuperar os dados de um determinado atributo e colocado dentro de uma variavel
         for( let i in this){ // vai percorrer os metodos da função registerExpenses, recuperando os atributos do obj expenses
 
+
+            //Verifica se o dia digitado no input e válido, se não for retorna o modal de erro
+            if(this.day > 31 || this.day == 0){
+                let invalidDay = document.getElementById('dia')
+                invalidDay.style.border = '1px solid red'
+                return false
+
+            }
+
             //Verificação para ver se os valore percorridos são inválidos ou não
             if( this[i] == undefined || this[i] == '' || this[i] == null){// o this[] essa notação permite acessar a partir do this do atributo os valores
                 return false
@@ -127,13 +136,17 @@ class Bd {
         return filterExpenses
     }
 
+
     removeRecord(id){
+
         localStorage.removeItem(id)
+
     }
 
 }
 
 let bd = new Bd()
+
 
 //Função para capturar os elementos id e os eventos de clique
 function registerExpenses(){
@@ -168,6 +181,10 @@ function registerExpenses(){
         document.getElementById('modalBtn').className = 'btn btn-success'
 
         $('#successRecording').modal('show') // Exibir mensagem
+
+
+        let validDay = document.getElementById('dia')
+        validDay.style.border = '1px solid green'
 
         year.value = ''
         month.value = ''
@@ -248,7 +265,7 @@ function uploadExpenseList( expenses = Array(), /*filter = false*/){
         btn.id = `id_expenses${d.id}` //Associando o id do obj expenses como valor do botão para cada button ter um id
         btn.style.display = 'flex'
         btn.style.justifyContent = 'center'
-        btn.style.width = '30px'
+        btn.style.width= '30px'
         btn.style.height= '30px'
         //Ação do botão que vai remover despesas
         btn.onclick = function(){
@@ -288,4 +305,13 @@ function expensesSearch(){
 }
 
 
+function print(){
+    document.getElementById('btn')
+    let content = document.getElementById('expensesTable').innerHTML
+    printingScreen = window.open('about:blank')
 
+    printingScreen.document.write(content)
+    printingScreen.window.print()
+    printingScreen.window.close()
+
+}
