@@ -28,6 +28,29 @@
     transition: 0.2s;
 }
 
+#home{
+    display: flex;
+    background-color: #F1731E;
+    margin-top: -50px;
+    padding-bottom: 30px;
+}
+
+.content-title, p{
+    color: white;
+}
+
+#content-register{
+    background-color:#E9E4CF;
+}
+
+.container-input{
+    margin-top: 40px;
+}
+
+.content-title-secundary{
+    color: #F1731E;
+}
+
 #btn-register{
     background-color:#F54401;
 }
@@ -36,4 +59,114 @@
     background-color: #F54401;
     color: white;
     margin-left: 10px;
+}
+
+.container-main-analise{
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: white;
+    border-radius:15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.campo-dados{
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 270px;
+    height:240px;
+    border-radius: 15px;
+    box-shadow:2px 2px 20px rgba(0, 0, 0, 0.5);
+    background-color: white;
+}
+
+#salarioAnalise{
+    margin-left: 20px;
+}
+
+#nomeAnalise{
+    margin-bottom: 20px;
+    display: inline-block;
+    color:#F54401;
+}
+
+.content-name-salary{
+    margin-top: 20px;
+    width: 150px;
+    margin-left:100px;
+}
+
+.content-name-salary img{
+    width: 30px;
+    height: 30px;
+}
+
+#valorSalarioTotal{
+    color: green;
+    font-size: medium;
+    margin-top: 10px;
+    
+}
+
+#gastosAnalise{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 45px;
+}
+
+.conteudo-despesas-analise{
+    width: 150px;
+    margin-left:120px;
+    margin-bottom: -10px;
+ 
+}
+.conteudo-despesas-analise img{
+    width: 30px;
+    height: 30px;
+}
+
+#valorDespesaTotal{
+    display: inline-block;
+    font-size: medium;
+    color: red;
+}
+
+#valorDespesaTotal img{
+    width: 30px;
+    height: 30px;
+}
+
+.card-saldo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-text-card{
+    margin-bottom: 100px;
+}
+
+.content-saldo{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 85%;
+}
+
+.content-saldo img{
+    width: 30px;
+    height: 20px;
+}
+
+/* EFEITO OLHO */
+
+.toggle-button {
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+#toggleDiv{
+    margin-left: 15px;
+    margin-bottom: 15px;   
 }

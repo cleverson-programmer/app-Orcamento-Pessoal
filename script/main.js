@@ -138,7 +138,6 @@ class Bd {
 
 
     removeRecord(id){
-
         localStorage.removeItem(id)
 
     }
@@ -256,7 +255,7 @@ function uploadExpenseList( expenses = Array(), /*filter = false*/){
         //metodo 'append' faz inclusao de um elemento
         line.insertCell(1).innerHTML = d.type
         line.insertCell(2).innerHTML = d.description
-        line.insertCell(3).innerHTML = `${d.value} R$`
+        line.insertCell(3).innerHTML = `${d.value},00 R$`
 
         //Botão de excluir registros salvos
         let btn = document.createElement("button")
@@ -315,3 +314,190 @@ function print(){
     printingScreen.window.close()
 
 }
+
+
+
+
+//DADOS PARA RECEBIDOS NO INPUT DE DADOS DO INDEX PARA USAR NA 'ANÁLISE'
+
+
+class Informations {
+    constructor(name, monthSalary, salary) {
+        this.name = name
+        this.monthSalary = monthSalary
+        this.salary = salary
+    }
+
+    registerInformations() {
+
+        //Atribuindo o obj a um array com posições ou retornar um array vazio ||[]
+        let informationsArray = JSON.parse(localStorage.getItem("informationsArray")) || []
+
+        //Verificar atraves do length a quantidade de indices do array se for maior que 0 não salva mais, se for não vai salvar porque so permite cadastrar uma vez.
+        if(informationsArray.length > 0){
+
+            document.getElementById('loginTitle').innerHTML = 'Erro, você já preencheu seus dados!'
+            document.getElementById('loginColor').className = 'modal-header text-danger'
+            document.getElementById('loginContent').innerHTML = 'Não e necessário preencher novamente!'
+            document.getElementById('loginBtn').innerHTML = 'Sair'
+            document.getElementById('loginBtn').className = 'btn btn-danger'
+    
+            $('#registerRecording').modal('show') // selecionando a div e exibindo o modal
+
+        }
+        else{
+            informationsArray.push(this)
+
+            document.getElementById('successTitle').innerHTML = 'Dados cadastrados com sucesso!'
+            document.getElementById('successColor').className = 'modal-header text-success'
+            document.getElementById('successContent').innerHTML = 'Você já pode analisar seus dados com base nos gastos!'
+            document.getElementById('successBtn').innerHTML = 'Sair'
+            document.getElementById('successBtn').className = 'btn btn-success'
+    
+            $('#registerRecordingSuccess').modal('show') // selecionando a div e exibindo o modal
+        }
+
+        localStorage.setItem("informationsArray", JSON.stringify(informationsArray))
+
+        //console.log(informationsArray) 
+
+
+        // Destructuring Assingnment do obj contido no array para depois extrair do obj o atributo nome
+
+        let [extractObj] = informationsArray
+        let obj = extractObj
+        //console.log(obj)
+                
+        let {name} = obj
+        let attrName = name
+        //console.log(attrName)
+        
+        let {salary} = obj
+        let attrSalary = salary
+        //console.log(attrSalary)
+
+
+    }
+
+    //Metodo para mostrar dados no cards da analise
+    showData(){
+
+        let informationsArray = JSON.parse(localStorage.getItem("informationsArray")) || []
+
+        //Var global para recuperar salário mais prático
+        window.globalSalary = JSON.parse(localStorage.getItem("informationsArray")) || []
+
+
+        let nomeAnaliseElement = document.getElementById('nomeAnalise')
+        //Verificação para mostrar o nome do cadastro
+            if(nomeAnaliseElement)
+            {
+                if (informationsArray.length > 0)
+                    {
+                    let { name } = informationsArray[0]; 
+                    document.getElementById('nomeAnalise').innerHTML = ` ${name}! <i class="fa fa-heart" aria-hidden="true"></i>`
+                    }
+                else
+                {
+                document.getElementById('nomeAnalise').innerHTML = 'Olá, usuário';
+                }
+            }
+
+        //Verificação para mostrar o valor bruto (salário sem os descontos de despesas)
+        let valueSalaryTotal = document.getElementById('valorSalarioTotal')
+        
+            if(valueSalaryTotal){
+                let { salary } = informationsArray[0]
+
+                document.getElementById('valorSalarioTotal').innerHTML = ` R$ ${salary},00`
+            }
+
+    }
+
+    //Metodo que recupera os ids salvos no metodo recover da classe bd para poder recuperar os valores das despesas
+    getShareDataValue(){
+        let ids = bd.recoverRecords('id')
+        console.log(ids)
+
+       let arrayValue = Array()
+
+       //Percorrer cada item do array, extrair o value de cada item, tornar a var global com o 'window'
+       //Transformar de string para number com parseFloat, enviar para o array
+       ids.forEach(function(d){
+           let {value} = d
+           window.attrValue = parseInt(value)
+           arrayValue.push(attrValue)
+        })
+        console.log(arrayValue)
+
+
+        // percorrer cada item do array e somar o anterior com o próximo
+        window.add = 0
+        for(let i = 0; i < arrayValue.length; i++){
+            add += arrayValue[i]
+        }
+        console.log(add)
+
+        document.getElementById('valorDespesaTotal').innerHTML = `R$ ${add},00`
+
+    }
+
+    cardBalance(){
+        
+        //Recuperando o salário para aplicar lógica
+        let { salary } = globalSalary[0]
+        console.log( salary)
+
+        //Saldo
+        let result = (salary - add)
+        console.log(result)
+
+        if(salary > result){
+          document.getElementById('saldoAnalise').innerHTML = `${result},00`
+          document.getElementById('saldoAnalise').style.color = 'green'
+
+        }
+        if(salary < add){
+            document.getElementById('saldoAnalise').innerHTML = `${result},00`
+            document.getElementById('saldoAnalise').style.color = 'red'
+        }
+    }
+
+}
+
+function register() {
+    let name = document.getElementById('nome').value
+    let monthSalary = document.getElementById('salarioMensal').value
+    let salary = document.getElementById('salario').value
+
+    let informations = new Informations(name, monthSalary, salary)
+    informations.registerInformations()
+    informations.showData()
+
+}
+
+window.onload = function() {
+    let informations = new Informations()
+    informations.showData()
+    informations.getShareDataValue()
+    informations.cardBalance()
+}
+
+
+//Função ocultar/mostrar saldo (salario - despesas)
+function eye() {
+    let toggleDiv = document.getElementById('toggleDiv');
+    let content = document.getElementById('saldoAnalise');
+    
+    if (content.style.display === 'block') {
+        content.style.display = 'none';
+        toggleDiv.classList.remove('fa-eye');
+        toggleDiv.classList.add('fa-eye-slash');
+    } else {
+        content.style.display = 'block';
+        toggleDiv.classList.remove('fa-eye-slash');
+        toggleDiv.classList.add('fa-eye');
+    }
+}
+
+document.getElementById('saldoAnalise').style.display = 'block';

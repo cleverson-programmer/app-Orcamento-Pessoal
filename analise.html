@@ -18,7 +18,7 @@
 
     <title>Orçamento Pessoal</title>
 </head>
-<body>
+<body style="background-color: #E9E4CF;">
     <nav class="navbar navbar-expand-lg  mb-5" id="color-navbar">
         <div class="container">
           <a class="navbar-brand" href="#">
@@ -44,5 +44,78 @@
           </div>
         </div>
       </nav>
+
+      <!--DIVS DOS CARDS COM AS ANÁLISES-->
+
+      <div>
+        <div class="container container-main-analise">
+          <div class="row-mb-4">
+            <div class="col-md-12 d-flex">
+
+              <!--CARD 1-->
+
+              <div class="align-self-center align-content-center campo-dados">
+                <div class="display-6 " id="salarioAnalise">
+                  <h6>
+                    Bem vindo(a),
+                  </h6>
+                  <h5 id="nomeAnalise">
+                   
+                  </h5>
+                  <div class="content-name-salary">
+                    <h6>
+                      Salário
+                    </h6>
+                    <div>
+                      <img src="images/arrow-trend-up-solid.svg" alt=""> <span id="valorSalarioTotal"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--CARD 2-->
+              <div class="align-self-center align-content-center campo-dados">
+                <div class="display-6" >
+                  <h6 class="title-card-secondary" id="gastosAnalise">
+                    <i class="fas fa-dollar-sign" style="width: 50px; height: 40px; color:#F54401;"></i>
+                  </h6>
+                  <div class="conteudo-despesas-analise">
+                    <h6>
+                      Despesas
+                    </h6>
+                    <div >
+                      <img src="images/arrow-trend-down-solid.svg" alt=""> <span id="valorDespesaTotal"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--CARD 3-->
+              <div class="align-self-center align-content-center campo-dados card-saldo">
+                <div class="display-6 ">
+                  <div class="content-text-card">
+                      <h6>
+                        Saldo geral <i class="fa fa-eye toggle-button" id="toggleDiv" onclick="eye()"></i>
+                      </h6>
+                    <div class="content-balance">
+                      <h5 style="display: flex;">
+                        <span style="font-size: 1rem;">R$</span><span id="saldoAnalise"></span>
+                      </h5>
+                    </div>
+                  </div>
+
+                  <div class="content-saldo">
+                    <h6>
+                      <img src="images/arrow-down-solid.svg" alt=""> <span id="valorSaldoTotal"></span> ver relatórios
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
 </body>
 </html>
