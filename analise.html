@@ -12,6 +12,8 @@
     
         <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     
+        <!--API CHART.JS PARA RECUPERAR DADOS FINANCEIROS-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <link rel="stylesheet" href="style.css">
         <script src="script/main.js"></script>
 
@@ -106,7 +108,9 @@
 
                   <div class="content-saldo">
                     <h6>
-                      <img src="images/arrow-down-solid.svg" alt=""> <span id="valorSaldoTotal"></span> ver relatórios
+                      <button type="button" id="btn-report" onclick="showRegister()">
+                        <img src="images/arrow-down-solid.svg" alt=""> <span id="valorSaldoTotal"></span> saldos anteriores
+                      </button>
                     </h6>
                   </div>
                 </div>
@@ -114,6 +118,96 @@
 
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="image-tec" style="width: min-content; display: flex; position: absolute; right: 15%; top: 550px;">
+        <img src="images/facil.png" style="height: 320px; width: auto;">
+      </div>
+
+      <!-- META DE ECONOMIA-->
+      <div class="container-gastos">
+        <div class="tipos">
+          <div class="list-cards">
+            <div class="card-economia">
+              <div class="icon" style="background-color: yellow;">
+                <i class="icon-tamanho fas fa-utensils" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="titulo-tipo">
+              <p>Alimentação</p>
+            </div>
+            <div class="valor-percentual">
+               <p id="valorPctFood">
+                
+               </p>
+            </div>
+          </div>
+
+          <div class="list-cards">
+            <div class="card-economia">
+              <div class="icon" style="background-color: blue;">
+                <i class=" icon-tamanho fa fa-graduation-cap" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="titulo-tipo">
+              <p>Educação</p>
+            </div>
+            <div class="valor-percentual">
+               <p id="valorPctEducation">
+                
+               </p>
+            </div>
+          </div>
+
+          <div class="list-cards">
+            <div class="card-economia">
+              <div class="icon" style="background-color: red;">
+                <i class=" icon-tamanho fa fa-plane" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="titulo-tipo">
+              <p>Lazer</p>
+            </div>
+            <div class="valor-percentual">
+               <p id="valorPctLeisure">
+                
+               </p>
+            </div>
+          </div>
+
+          <div class="list-cards">
+            <div class="card-economia">
+              <div class="icon" style="background-color: green;">
+                <i class="icon-tamanho fas fa-medkit"aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="titulo-tipo">
+              <p>Saúde</p>
+            </div>
+            <div class="valor-percentual">
+               <p id="valorPctHealth">
+                
+               </p>
+            </div>
+          </div>
+
+          <div class="list-cards">
+            <div class="card-economia">
+              <div class="icon" style="background-color: black;">
+                <i class="icon-tamanho fa fa-car" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="titulo-tipo">
+              <p>Transporte</p>
+            </div>
+            <div class="valor-percentual">
+               <p id="valorPctTransport">
+                
+               </p>
+            </div>
+          </div>
+
         </div>
       </div>
 

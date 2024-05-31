@@ -355,7 +355,7 @@ class Informations {
             document.getElementById('successBtn').className = 'btn btn-success'
     
             $('#registerRecordingSuccess').modal('show') // selecionando a div e exibindo o modal
-        }
+        } 
 
         localStorage.setItem("informationsArray", JSON.stringify(informationsArray))
 
@@ -417,19 +417,24 @@ class Informations {
     //Metodo que recupera os ids salvos no metodo recover da classe bd para poder recuperar os valores das despesas
     getShareDataValue(){
         let ids = bd.recoverRecords('id')
-        console.log(ids)
+        //console.log(ids)
 
-       let arrayValue = Array()
+       window.arrayValue = Array()
+       //console.log(arrayValue)
+       
+       let arrayType = Array()
+       //console.log(arrayType)
 
        //Percorrer cada item do array, extrair o value de cada item, tornar a var global com o 'window'
        //Transformar de string para number com parseFloat, enviar para o array
-       ids.forEach(function(d){
-           let {value} = d
-           window.attrValue = parseInt(value)
-           arrayValue.push(attrValue)
-        })
-        console.log(arrayValue)
 
+       ids.forEach(function(d){
+            let { value, type } = d;
+            let attrValue = parseInt(value);
+            let attrType = parseInt(type);
+            arrayValue.push(attrValue);
+            arrayType.push(attrType);
+        });
 
         // percorrer cada item do array e somar o anterior com o próximo
         window.add = 0
@@ -446,24 +451,186 @@ class Informations {
         
         //Recuperando o salário para aplicar lógica
         let { salary } = globalSalary[0]
-        console.log( salary)
+        //console.log( salary)
 
         //Saldo
-        let result = (salary - add)
-        console.log(result)
+        window.result = (salary - add)
+        //console.log(result)
 
-        if(salary > result){
-          document.getElementById('saldoAnalise').innerHTML = `${result},00`
-          document.getElementById('saldoAnalise').style.color = 'green'
+        //Salvar dados do result no LS
+        let dados = JSON.parse(localStorage.getItem("dados")) || [];
 
+        // Verifica se o valor já existe no localStorage antes de adicioná-lo
+        if (!dados.includes(result)) {
+            dados.push(result);
+            localStorage.setItem("dados", JSON.stringify(dados));
         }
-        if(salary < add){
-            document.getElementById('saldoAnalise').innerHTML = `${result},00`
-            document.getElementById('saldoAnalise').style.color = 'red'
+    
+        // Atualiza a exibição do saldo na página
+        let saldoAnaliseElement = document.getElementById('saldoAnalise');
+        saldoAnaliseElement.innerHTML = `${result},00`;
+        saldoAnaliseElement.style.color = (salary >= add) ? 'green' : 'red';
+
+        let dynamicItems = []
+
+        function showRegister(){
+            
+            //Ver relatórios com os saldos anteriores
+            let register = document.getElementById('btn-report')
+            register.onclick = function() {
+
+                // Verifica se a div com a lista já existe
+                let existingDiv = document.getElementById('list-container')
+                if (existingDiv) {
+
+                    // Se a div existir, remove ela
+                    document.body.removeChild(existingDiv)
+                } else {
+
+                    // Cria uma nova div e define um id para ela
+                    let div = document.createElement('div')
+                    div.id = 'list-container'
+                    div.style.marginLeft = '63%'
+                    div.style.backgroundColor = 'white'
+                    div.style.width = '270px'
+                    div.style.display = 'flex'
+                    div.style.justifyContent = 'center'
+                    div.style.marginTop = '20px'
+                    div.style.borderRadius = '15px'
+                    div.style.boxShadow = '2px 2px 20px rgba(0, 0, 0, 0.5)'
+                    div.style.position = 'absolute'
+                    div.style.top = '508px'
+                    div.style.zIndex = '1'
+
+                    let table = document.createElement('table');
+                    table.style.width = '100%';
+                    table.style.borderCollapse = 'collapse';
+
+
+                    let tbody = document.createElement('tbody');
+
+
+                    let limitedRows = dados.slice(0, 5);
+
+                    limitedRows.forEach(function(dado) {
+                        let row = document.createElement('tr');
+                        let cell = document.createElement('td');
+                
+                        cell.textContent = dado;
+                        cell.style.textAlign = 'center';
+                        cell.style.padding = '8px';
+                                        
+                        if (dado > 0) {
+                            cell.style.color = 'green';
+                        } else {
+                            cell.style.color = 'red';
+                        }
+                
+                        row.appendChild(cell);
+                        tbody.appendChild(row);
+                        dynamicItems.push(dado);
+                    });
+
+
+                    table.appendChild(tbody);
+                    div.appendChild(table);
+                    document.body.appendChild(div);
+                        
+                }
+            }
         }
+        showRegister()
+    }
+
+    //Metodo para filtrar os gastos por tipo e mostrar a porcentagem de gastos
+    filterSpendingByType(){
+
+        function sumArray(array) {
+            return array.reduce((acc, val) => acc + parseFloat(val), 0);
+        }
+
+        let objComplete = bd.recoverRecords('id')
+        //console.log(objComplete)
+
+        //Cada tipo receber seu valor especifíco
+
+        let food = Array()
+
+        let education = Array()
+
+        let leisurex = Array()
+
+        let health = Array()
+
+        let transport = Array()
+
+        //Percorrer array, pegar o tipo e o valor e associar cada um a uma variavel
+        objComplete.forEach(function( d ){
+
+            let { type, value } = d;
+            let attrType = parseInt(type);
+            let attrValue = parseInt(value)
+
+            //Metodo 'reduce()' reduz o array a um unio valor
+            //Acumulador (acc) - o valor acumulado que será retornado no final.
+            //Valor Atual (cur) - o valor do elemento atual que está sendo processado no array.
+            //Índice Atual (index) - o índice do elemento atual que está sendo processado no array.
+            //Array Original (src) - o array original que está sendo reduzido.
+
+            let add = objComplete.reduce((acc, cur) => acc + parseInt(cur.value), 0)
+            let percentage = parseFloat((attrValue / add) * 100).toFixed(2)
+
+             //Cada tipo recebendo seu valor
+            switch(attrType){
+                case 1:
+
+                    food.push(percentage)
+                    break;
+
+                case 2:
+                    education.push(percentage)
+                    break;
+
+                case 3:
+                    leisurex.push(percentage)
+                    break;
+                
+                case 4:
+                    health.push(percentage)
+                    break;
+                
+                case 5:
+                    transport.push(percentage)
+                    break;
+                
+            }
+            
+        })
+        
+        //Somar os indices de cada array para obter a porcentagem total
+        let foodSum = sumArray(food);
+        let educationSum = sumArray(education);
+        let leisurexSum = sumArray(leisurex);
+        let healthSum = sumArray(health);
+        let transportSum = sumArray(transport);
+
+        document.getElementById('valorPctFood').innerHTML = `${foodSum}%`
+        document.getElementById('valorPctEducation').innerHTML = `${educationSum}%`
+        document.getElementById('valorPctLeisure').innerHTML = `${leisurexSum}%`
+        document.getElementById('valorPctHealth').innerHTML = `${healthSum}%`
+        document.getElementById('valorPctTransport').innerHTML = `${transportSum}%`
+
+        console.log('Food:', foodSum);
+        console.log('Education:', educationSum);
+        console.log('Leisure:', leisurexSum);
+        console.log('Health:', healthSum);
+        console.log('Transport:', transportSum);
+
+
     }
 
 }
+
 
 function register() {
     let name = document.getElementById('nome').value
@@ -481,23 +648,24 @@ window.onload = function() {
     informations.showData()
     informations.getShareDataValue()
     informations.cardBalance()
+    informations.filterSpendingByType()
 }
-
 
 //Função ocultar/mostrar saldo (salario - despesas)
 function eye() {
-    let toggleDiv = document.getElementById('toggleDiv');
-    let content = document.getElementById('saldoAnalise');
+    let toggleDiv = document.getElementById('toggleDiv')
+    let content = document.getElementById('saldoAnalise')
     
     if (content.style.display === 'block') {
-        content.style.display = 'none';
-        toggleDiv.classList.remove('fa-eye');
-        toggleDiv.classList.add('fa-eye-slash');
+        content.style.display = 'none'
+        toggleDiv.classList.remove('fa-eye')
+        toggleDiv.classList.add('fa-eye-slash')
     } else {
-        content.style.display = 'block';
-        toggleDiv.classList.remove('fa-eye-slash');
-        toggleDiv.classList.add('fa-eye');
+        content.style.display = 'block'
+        toggleDiv.classList.remove('fa-eye-slash')
+        toggleDiv.classList.add('fa-eye')
     }
 }
 
-document.getElementById('saldoAnalise').style.display = 'block';
+document.getElementById('saldoAnalise').style.display = 'block'
+
